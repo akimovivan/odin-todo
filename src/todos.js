@@ -1,10 +1,10 @@
 class Todo {
-  constructor(title, description, dueDate, priority, project) {
+  constructor(title, description, dueDate, priority, project, done = false) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate; // string for now
     this.priority = priority;
-    this.done = false;
+    this.done = done;
 
     if (projects.includes(project)) {
       this.project = project;
@@ -39,6 +39,7 @@ class Todo {
       data.dueDate,
       data.priority,
       data.project,
+      data.done,
     );
   }
 }
@@ -59,6 +60,7 @@ function getFromStorage() {
     const todosDeconstructed = JSON.parse(localStorage.getItem("todos"));
     todos = [];
     for (const todo of todosDeconstructed) {
+      console.log(todo.done);
       Todo.fromJSON(todo);
     }
   } catch (e) {

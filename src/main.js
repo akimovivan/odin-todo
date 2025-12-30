@@ -32,7 +32,7 @@ function updateContents() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.for = item.title;
-    checkbox.checked = item.checked;
+    checkbox.checked = item.done;
 
     checkbox.addEventListener("change", () => {
       item.toggleStatus();
