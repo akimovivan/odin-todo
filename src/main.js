@@ -6,12 +6,13 @@ import {
   createProject,
   getFromStorage,
 } from "./todos.js";
-import { createTodoForm } from "./ui.js";
+import { createTodoForm, updateTodoModal } from "./ui.js";
 
 getFromStorage();
 
 createProject("default");
 
+/** Update ui */
 function updateContents() {
   const proj = document.querySelector("#projects");
   const tds = document.querySelector("#todos");
@@ -31,6 +32,10 @@ function updateContents() {
     const newTodo = document.createElement("span");
     newTodo.innerText = item.title;
     newTodo.id = item.title;
+
+    newTodo.addEventListener("click", () => {
+      updateTodoModal(todoModal, item);
+    });
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -60,10 +65,12 @@ app.innerHTML += `
 <div id="projects"></div>
 <h2>Todos</h2>
 <div id="todos"></div>
-<button id="createTodo">Create todo</button>
+<div id="todoModal"></div>
 `;
 
 updateContents();
+
+const todoModal = document.querySelector("#todoModal");
 
 document.querySelector("#submitTodo").addEventListener("click", () => {
   const form = document.forms[0];

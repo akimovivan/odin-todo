@@ -30,13 +30,17 @@ class Todo {
     localStorage.setItem("todos", JSON.stringify(todos));
   }
 
-  //toggleStatus changes done status of this todo
+  /** toggleStatus changes done status of this todo */
   toggleStatus() {
     this.done = !this.done;
     localStorage.setItem("todos", JSON.stringify(todos));
   }
 
-  // addToProject returns true if project exists, false otherwise
+  /**
+   * addToProject returns true if project exists, false otherwise
+   * @param {string} project - Project name
+   * @returns {boolean} Check if project exists
+   */
   addToProject(project) {
     if (projects.includes(project)) {
       this.project = project;
@@ -46,6 +50,11 @@ class Todo {
     return false;
   }
 
+  /**
+   * Convert object to Todo class
+   * @param {object} data - Simple object
+   * @returns {Todo} Data converted to Todo class
+   */
   static fromJSON(data) {
     return new Todo(
       data.title,
@@ -58,13 +67,16 @@ class Todo {
   }
 }
 
+/** @type {string[]} */
 let projects = [];
+
+/** @type {Todo[]} */
 let todos = [];
 
 /**
  * Creates project if it does not exist
- * @param {striing} project - Project title
- * @param {() => void} updateFunction - Updates content
+ * @param {string} project - Project title
+ * @param {() => void | null} updateFunction - Updates content
  */
 function createProject(project, updateFunction) {
   if (!projects.includes(project)) {
