@@ -21,16 +21,31 @@ function createTodoForm() {
   return form;
 }
 
+/** Close todo modal */
+function closeTodoModal() {
+  todoModal.style.display = "none";
+}
+
 /**
  * modal window with todo details
  * @param {HTMLElement} modal - Modal to update
  * @param {Todo} todo - Todo to display
  */
 function updateTodoModal(modal, todo) {
-  modal.innerHTML = `
-<div>Title: ${todo.title}</div>
-<div>Description: ${todo.description}</div>
-`;
+  modal.innerHTML = "";
+  const closeModalBtn = document.createElement("span");
+  closeModalBtn.innerHTML = "&times;";
+  closeModalBtn.classList.add("close");
+  closeModalBtn.addEventListener("click", closeTodoModal);
+  modal.appendChild(closeModalBtn);
+
+  const title = document.createElement("div");
+  title.innerHTML = `<div>Title: ${todo.title}</div>`;
+  modal.appendChild(title);
+
+  const description = document.createElement("div");
+  description.innerHTML = `<div>Description: ${todo.description}</div>`;
+  modal.appendChild(description);
 }
 
 export { createTodoForm, updateTodoModal };

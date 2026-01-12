@@ -35,6 +35,7 @@ function updateContents() {
 
     newTodo.addEventListener("click", () => {
       updateTodoModal(todoModal, item);
+      todoModal.style.display = "block";
     });
 
     const checkbox = document.createElement("input");
@@ -65,7 +66,7 @@ app.innerHTML += `
 <div id="projects"></div>
 <h2>Todos</h2>
 <div id="todos"></div>
-<div id="todoModal"></div>
+<div id="todoModal" class="modal"></div>
 `;
 
 updateContents();
