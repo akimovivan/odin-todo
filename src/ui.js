@@ -1,6 +1,6 @@
 /** @module ui */
 
-import { Todo } from "./todos";
+import { Todo, projects } from "./todos";
 
 /**
  * Form for todo creation
@@ -9,15 +9,57 @@ import { Todo } from "./todos";
  */
 function createTodoForm() {
   const form = document.createElement("form");
-  form.innerHTML = `
-<label for="title">Title:</label><br>
-<input type="text" id="title" name="title"><br>
 
-<label for="description">Description:</label><br>
-<input type="text" id="description" name="description"><br>
+  const titleLabel = document.createElement("label");
+  titleLabel.setAttribute("for", "title");
+  titleLabel.textContent = "Title:";
+  form.appendChild(titleLabel);
 
-<button id="submitTodo" type="button">Create Todo</button>
-`;
+  form.appendChild(document.createElement("br"));
+
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.id = "title";
+  titleInput.name = "title";
+  form.appendChild(titleInput);
+
+  form.appendChild(document.createElement("br"));
+
+  const descriptionLabel = document.createElement("label");
+  descriptionLabel.setAttribute("for", "description");
+  descriptionLabel.textContent = "Description:";
+  form.appendChild(descriptionLabel);
+
+  form.appendChild(document.createElement("br"));
+
+  const descriptionInput = document.createElement("input");
+  descriptionInput.type = "text";
+  descriptionInput.id = "description";
+  descriptionInput.name = "description";
+  form.appendChild(descriptionInput);
+
+  form.appendChild(document.createElement("br"));
+
+  const selectProject = document.createElement("select");
+  selectProject.id = "selectProject";
+  selectProject.name = "selectProject";
+  form.appendChild(selectProject);
+
+  for (const project of projects) {
+    var option = document.createElement("option");
+    option.value = project;
+    option.text = project;
+    selectProject.appendChild(option);
+  }
+
+  form.appendChild(document.createElement("br"));
+
+  const submitBtn = document.createElement("button");
+  submitBtn.id = "submitTodo";
+  submitBtn.type = "button";
+  submitBtn.innerText = "Create Todo";
+  form.appendChild(submitBtn);
+
   return form;
 }
 
@@ -40,12 +82,16 @@ function updateTodoModal(modal, todo) {
   modal.appendChild(closeModalBtn);
 
   const title = document.createElement("div");
-  title.innerHTML = `<div>Title: ${todo.title}</div>`;
+  title.innerText = `Title: ${todo.title}`;
   modal.appendChild(title);
 
   const description = document.createElement("div");
-  description.innerHTML = `<div>Description: ${todo.description}</div>`;
+  description.innerText = `Description: ${todo.description}`;
   modal.appendChild(description);
+
+  const project = document.createElement("div");
+  project.innerText = `Project: ${todo.project}`;
+  modal.appendChild(project);
 }
 
 export { createTodoForm, updateTodoModal };

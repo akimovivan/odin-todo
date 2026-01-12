@@ -80,7 +80,7 @@ document.querySelector("#submitTodo").addEventListener("click", () => {
     form.elements.description.value,
     "",
     3,
-    "default",
+    form.elements.selectProject.value,
   );
   updateContents();
 });
