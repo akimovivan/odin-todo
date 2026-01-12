@@ -46,10 +46,24 @@ function createTodoForm() {
   form.appendChild(selectProject);
 
   for (const project of projects) {
-    var option = document.createElement("option");
+    const option = document.createElement("option");
     option.value = project;
     option.text = project;
     selectProject.appendChild(option);
+  }
+
+  form.appendChild(document.createElement("br"));
+
+  const selectPriority = document.createElement("select");
+  selectPriority.id = "selectPriority";
+  selectPriority.name = "selectPriority";
+  form.appendChild(selectPriority);
+
+  for (let i = 1; i < 5; i++) {
+    const option = document.createElement("option");
+    option.text = `Priority ${i}`;
+    option.value = i;
+    selectPriority.appendChild(option);
   }
 
   form.appendChild(document.createElement("br"));
@@ -92,6 +106,10 @@ function updateTodoModal(modal, todo) {
   const project = document.createElement("div");
   project.innerText = `Project: ${todo.project}`;
   modal.appendChild(project);
+
+  const priority = document.createElement("div");
+  project.innerText = `Priority: ${todo.priority}`;
+  modal.appendChild(priority);
 }
 
 export { createTodoForm, updateTodoModal };

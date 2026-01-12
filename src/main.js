@@ -79,7 +79,7 @@ document.querySelector("#submitTodo").addEventListener("click", () => {
     form.elements.title.value,
     form.elements.description.value,
     "",
-    3,
+    form.elements.selectPriority.value,
     form.elements.selectProject.value,
   );
   updateContents();

@@ -13,6 +13,9 @@ class Todo {
    * @param {boolean | null} done - Is todo done
    */
   constructor(title, description, dueDate, priority, project, done = false) {
+    if (todos.some((todo) => todo.title == title)) {
+      throw new Error("Duplicate todo");
+    }
     this.title = title;
     this.description = description;
     this.dueDate = dueDate; // string for now
