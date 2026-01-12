@@ -1,4 +1,18 @@
+/** @module todos */
+
+/**
+ * Todo object with related objects
+ */
 class Todo {
+  /**
+   * @param {string} title - Title of todo
+   * @param {string} description - Title of todo
+   * @param {string} description - Description of todo
+   * @param {string} dueDate - Due date of todo
+   * @param {number} priority - Priority of todo
+   * @param {string} project - Project to which todo belongs to
+   * @param {boolean | null} done - Is todo done
+   */
   constructor(title, description, dueDate, priority, project, done = false) {
     this.title = title;
     this.description = description;
@@ -47,20 +61,26 @@ class Todo {
 let projects = [];
 let todos = [];
 
-function createProject(project) {
+/**
+ * Creates project if it does not exist
+ * @param {striing} project - Project title
+ * @param {() => void} updateFunction - Updates content
+ */
+function createProject(project, updateFunction) {
   if (!projects.includes(project)) {
     projects.push(project);
     localStorage.setItem("projects", JSON.stringify(projects));
   }
+  if (updateFunction) updateFunction();
 }
 
+/** Update todo and projects from values stored in local storage */
 function getFromStorage() {
   try {
     projects = JSON.parse(localStorage.getItem("projects"));
     const todosDeconstructed = JSON.parse(localStorage.getItem("todos"));
     todos = [];
     for (const todo of todosDeconstructed) {
-      console.log(todo.done);
       Todo.fromJSON(todo);
     }
   } catch (e) {

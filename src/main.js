@@ -6,8 +6,11 @@ import {
   createProject,
   getFromStorage,
 } from "./todos.js";
+import { createTodoForm } from "./ui.js";
 
 getFromStorage();
+
+createProject("default");
 
 function updateContents() {
   const proj = document.querySelector("#projects");
@@ -36,7 +39,6 @@ function updateContents() {
 
     checkbox.addEventListener("change", () => {
       item.toggleStatus();
-      console.log(item.done);
       for (const todo of todos) {
         console.log(`Title: ${todo.title}, Status: ${todo.done}`);
       }
@@ -48,7 +50,11 @@ function updateContents() {
   }
 }
 
-document.querySelector("#app").innerHTML = `
+const app = document.querySelector("#app");
+
+app.appendChild(createTodoForm(app));
+
+app.innerHTML += `
 <h1>Todo app</h1>
 <h2>Projects</h2>
 <div id="projects"></div>
@@ -56,16 +62,17 @@ document.querySelector("#app").innerHTML = `
 <div id="todos"></div>
 <button id="createTodo">Create todo</button>
 `;
+
 updateContents();
 
-// setupCounter(document.querySelector("#counter"));
-
-document
-  .querySelector("#createTodo")
-  .addEventListener("click", function createTodo() {
-    const todo = new Todo("sas", "velik", "gae", "max", "");
-    createProject("sas_project");
-    console.log(todos);
-    console.log(projects);
-    updateContents();
-  });
+document.querySelector("#submitTodo").addEventListener("click", () => {
+  const form = document.forms[0];
+  new Todo(
+    form.elements.title.value,
+    form.elements.description.value,
+    "",
+    3,
+    "default",
+  );
+  updateContents();
+});
