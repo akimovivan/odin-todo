@@ -76,7 +76,7 @@ let todos = [];
 /**
  * Creates project if it does not exist
  * @param {string} project - Project title
- * @param {() => void | null} updateFunction - Updates content
+ * @param {function(): void | null} updateFunction - Updates content
  */
 function createProject(project, updateFunction) {
   if (!projects.includes(project)) {
