@@ -17,35 +17,7 @@ function generateBaseHTML(app, todos, projects) {
   todoHolder.id = "todoHolder";
   app.appendChild(todoHolder);
 
-  for (const project of projects) {
-    const newProject = document.createElement("div");
-    newProject.innerText = project;
-    projectMenu.append(newProject);
-  }
-
-  for (const todo of todos) {
-    const wrapper = document.createElement("div");
-    const newTodo = document.createElement("span");
-    newTodo.name = todo.title;
-    newTodo.innerText = todo.title;
-
-    newTodo.addEventListener("click", () => {
-      updateTodoModal(todoModal, todo);
-      todoModal.style.display = "block";
-    });
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.for = todo.title;
-    checkbox.checked = todo.done;
-
-    checkbox.addEventListener("change", () => {
-      item.toggleStatus();
-    });
-    wrapper.append(checkbox);
-    wrapper.append(newTodo);
-    todoHolder.append(wrapper);
-  }
+  updateContents(todos, projects);
 }
 
 /**
@@ -158,4 +130,48 @@ function updateTodoModal(modal, todo) {
   modal.appendChild(priority);
 }
 
-export { createTodoForm, updateTodoModal, generateBaseHTML as baseHTML };
+/**
+ * Updates projects and todos
+ * @param {Todo[]} todos
+ * @param {string[]} projects
+ */
+function updateContents(todos, projects) {
+  const projectMenu = document.querySelector("#projectMenu");
+  const todoHolder = document.querySelector("#todoHolder");
+
+  projectMenu.innerHTML = "";
+  todoHolder.innerHTML = "";
+  for (const project of projects) {
+    const newProject = document.createElement("div");
+    newProject.innerText = project;
+    newProject.classList.add("project-item");
+    projectMenu.append(newProject);
+  }
+
+  for (const todo of todos) {
+    const wrapper = document.createElement("div");
+    const newTodo = document.createElement("span");
+    newTodo.name = todo.title;
+    newTodo.innerText = todo.title;
+    newTodo.classList.add("todo-item");
+
+    newTodo.addEventListener("click", () => {
+      updateTodoModal(todoModal, todo);
+      todoModal.style.display = "block";
+    });
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.for = todo.title;
+    checkbox.checked = todo.done;
+
+    checkbox.addEventListener("change", () => {
+      item.toggleStatus();
+    });
+    wrapper.append(checkbox);
+    wrapper.append(newTodo);
+    todoHolder.append(wrapper);
+  }
+}
+
+export { createTodoForm, updateTodoModal, generateBaseHTML };
