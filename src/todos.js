@@ -1,5 +1,11 @@
 /** @module todos */
 
+/** @type {string[]} */
+let projects = [];
+
+/** @type {Todo[]} */
+let todos = [];
+
 /**
  * Todo object with related objects
  */
@@ -69,12 +75,6 @@ class Todo {
     );
   }
 }
-
-/** @type {string[]} */
-let projects = [];
-
-/** @type {Todo[]} */
-let todos = [];
 
 /**
  * Creates project if it does not exist
