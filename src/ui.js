@@ -1,6 +1,6 @@
 /** @module ui */
 
-import { Todo, projects } from "./todos";
+import { Todo, createProject, projects } from "./todos";
 
 /**
  * Creates basic structure
@@ -202,4 +202,49 @@ function updateContents(todos, projects) {
   }
 }
 
-export { openTodoForm, updateTodoModal, initializeUI };
+function openProjectForm(modal) {
+  const form = document.createElement("form");
+
+  // NOTE: On pressing enter form submits which is kinda bad
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+  });
+
+  const projectLabel = document.createElement("label");
+  projectLabel.setAttribute("for", "projectName");
+  projectLabel.textContent = "Project name:";
+  form.appendChild(projectLabel);
+
+  form.appendChild(document.createElement("br"));
+
+  const projectNameInput = document.createElement("input");
+  projectNameInput.type = "text";
+  projectNameInput.id = "projectName";
+  projectNameInput.name = "projectName";
+  form.appendChild(projectNameInput);
+
+  form.appendChild(document.createElement("br"));
+
+  const submitBtn = document.createElement("button");
+  submitBtn.id = "submitProject";
+  submitBtn.type = "button";
+  submitBtn.innerText = "Create Project";
+  submitBtn.addEventListener("click", () => {
+    createProject(form.elements.projectName.value);
+    updateContents(null, projects);
+    closeModal(modal);
+  });
+  form.appendChild(submitBtn);
+
+  modal.innerHTML = "";
+  const closeModalBtn = document.createElement("span");
+  closeModalBtn.innerHTML = "&times;";
+  closeModalBtn.classList.add("close");
+  closeModalBtn.addEventListener("click", () => closeModal(modal));
+  modal.appendChild(closeModalBtn);
+
+  modal.appendChild(form);
+  modal.style.display = "block";
+}
+
+export { openProjectForm, openTodoForm, updateTodoModal, initializeUI };

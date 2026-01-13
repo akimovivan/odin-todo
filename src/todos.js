@@ -79,14 +79,12 @@ class Todo {
 /**
  * Creates project if it does not exist
  * @param {string} project - Project title
- * @param {function(): void | null} updateFunction - Updates content
  */
-function createProject(project, updateFunction) {
+function createProject(project) {
   if (!projects.includes(project)) {
     projects.push(project);
     localStorage.setItem("projects", JSON.stringify(projects));
   }
-  if (updateFunction) updateFunction();
 }
 
 /** Update todo and projects from values stored in local storage */
