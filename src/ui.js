@@ -8,7 +8,7 @@ import { Todo, projects } from "./todos";
  * @param {Todo[]} todos
  * @param {string[]} projects
  * */
-function generateBaseHTML(app, todos, projects) {
+function initializeUI(app, todos, projects) {
   const projectMenu = document.createElement("div");
   projectMenu.id = "projectMenu";
   app.appendChild(projectMenu);
@@ -22,10 +22,10 @@ function generateBaseHTML(app, todos, projects) {
 
 /**
  * Form for todo creation
- * @constructor
- * @returns {HTMLFormElement} Created form
+ * @param {HTMLElement} modal - Modal for appending form
+ * @param {Todo[]} todos
  */
-function createTodoForm() {
+function openTodoForm(modal, todos) {
   const form = document.createElement("form");
 
   const titleLabel = document.createElement("label");
@@ -90,14 +90,37 @@ function createTodoForm() {
   submitBtn.id = "submitTodo";
   submitBtn.type = "button";
   submitBtn.innerText = "Create Todo";
+  submitBtn.addEventListener("click", () => {
+    const form = document.forms[0];
+    new Todo(
+      form.elements.title.value,
+      form.elements.description.value,
+      "", // TODO: add date handling
+      form.elements.selectPriority.value,
+      form.elements.selectProject.value,
+    );
+    updateContents(todos, null);
+    closeModal(modal);
+  });
   form.appendChild(submitBtn);
 
-  return form;
+  modal.innerHTML = "";
+  const closeModalBtn = document.createElement("span");
+  closeModalBtn.innerHTML = "&times;";
+  closeModalBtn.classList.add("close");
+  closeModalBtn.addEventListener("click", () => closeModal(modal));
+  modal.appendChild(closeModalBtn);
+
+  modal.appendChild(form);
+  modal.style.display = "block";
 }
 
-/** Close todo modal */
-function closeTodoModal() {
-  todoModal.style.display = "none";
+/**
+ * Close todo modal
+ * @param {HTMLElement} modal
+ * */
+function closeModal(modal) {
+  modal.style.display = "none";
 }
 
 /**
@@ -110,7 +133,7 @@ function updateTodoModal(modal, todo) {
   const closeModalBtn = document.createElement("span");
   closeModalBtn.innerHTML = "&times;";
   closeModalBtn.classList.add("close");
-  closeModalBtn.addEventListener("click", closeTodoModal);
+  closeModalBtn.addEventListener("click", closeModal(modal));
   modal.appendChild(closeModalBtn);
 
   const title = document.createElement("div");
@@ -132,22 +155,27 @@ function updateTodoModal(modal, todo) {
 
 /**
  * Updates projects and todos
- * @param {Todo[]} todos
- * @param {string[]} projects
+ * @param {Todo[] | null} todos
+ * @param {string[] | null} projects
  */
 function updateContents(todos, projects) {
   const projectMenu = document.querySelector("#projectMenu");
   const todoHolder = document.querySelector("#todoHolder");
 
-  projectMenu.innerHTML = "";
-  todoHolder.innerHTML = "";
-  for (const project of projects) {
-    const newProject = document.createElement("div");
-    newProject.innerText = project;
-    newProject.classList.add("project-item");
-    projectMenu.append(newProject);
+  if (projects) {
+    projectMenu.innerHTML = "";
+    for (const project of projects) {
+      const newProject = document.createElement("div");
+      newProject.innerText = project;
+      newProject.classList.add("project-item");
+      projectMenu.append(newProject);
+    }
   }
 
+  if (todos == null) {
+    return;
+  }
+  todoHolder.innerHTML = "";
   for (const todo of todos) {
     const wrapper = document.createElement("div");
     const newTodo = document.createElement("span");
@@ -155,10 +183,10 @@ function updateContents(todos, projects) {
     newTodo.innerText = todo.title;
     newTodo.classList.add("todo-item");
 
-    newTodo.addEventListener("click", () => {
-      updateTodoModal(todoModal, todo);
-      todoModal.style.display = "block";
-    });
+    // newTodo.addEventListener("click", () => {
+    //   updateTodoModal(todoModal, todo);
+    //   todoModal.style.display = "block";
+    // });
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -174,4 +202,4 @@ function updateContents(todos, projects) {
   }
 }
 
-export { createTodoForm, updateTodoModal, generateBaseHTML };
+export { openTodoForm, updateTodoModal, initializeUI };

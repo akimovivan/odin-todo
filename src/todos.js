@@ -5,6 +5,7 @@
  */
 class Todo {
   /**
+   * @constructor
    * @param {string} title - Title of todo
    * @param {string} description - Description of todo
    * @param {string} dueDate - Due date of todo

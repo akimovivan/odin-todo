@@ -1,34 +1,17 @@
 import "./style.css";
-import {
-  Todo,
-  todos,
-  projects,
-  createProject,
-  getFromStorage,
-} from "./todos.js";
-import { generateBaseHTML, createTodoForm, updateTodoModal } from "./ui.js";
-
-getFromStorage();
-
-createProject("default");
+import "normalize.css/normalize.css";
+import { todos, projects, createProject, getFromStorage } from "./todos.js";
+import { initializeUI, openTodoForm } from "./ui.js";
 
 const app = document.querySelector("#app");
 
-// app.appendChild(createTodoForm(app));
+getFromStorage();
+createProject("default");
 
-console.log(todos, projects);
-generateBaseHTML(app, todos, projects);
+initializeUI(app, todos, projects);
 
-const todoModal = document.querySelector("#todoModal");
+const modal = document.querySelector("#modal");
 
-// document.querySelector("#submitTodo").addEventListener("click", () => {
-//   const form = document.forms[0];
-//   new Todo(
-//     form.elements.title.value,
-//     form.elements.description.value,
-//     "",
-//     form.elements.selectPriority.value,
-//     form.elements.selectProject.value,
-//   );
-//   updateContents();
-// });
+document
+  .getElementById("todoFormBtn")
+  .addEventListener("click", () => openTodoForm(modal, todos));
