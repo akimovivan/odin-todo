@@ -6,7 +6,7 @@ import {
   createProject,
   getFromStorage,
 } from "./todos.js";
-import { createTodoForm, updateTodoModal } from "./ui.js";
+import { baseHTML, createTodoForm, updateTodoModal } from "./ui.js";
 
 getFromStorage();
 
@@ -58,16 +58,10 @@ function updateContents() {
 
 const app = document.querySelector("#app");
 
-app.appendChild(createTodoForm(app));
+// app.appendChild(createTodoForm(app));
 
-app.innerHTML += `
-<h1>Todo app</h1>
-<h2>Projects</h2>
-<div id="projects"></div>
-<h2>Todos</h2>
-<div id="todos"></div>
-<div id="todoModal" class="modal"></div>
-`;
+console.log(todos, projects);
+baseHTML(app, todos, projects);
 
 updateContents();
 

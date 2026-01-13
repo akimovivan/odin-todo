@@ -3,6 +3,52 @@
 import { Todo, projects } from "./todos";
 
 /**
+ * Creates basic structure
+ * @param {HTMLElement} app
+ * @param {Todo[]} todos
+ * @param {string[]} projects
+ * */
+function generateBaseHTML(app, todos, projects) {
+  const projectMenu = document.createElement("div");
+  projectMenu.id = "projectMenu";
+  app.appendChild(projectMenu);
+
+  const todoHolder = document.createElement("div");
+  todoHolder.id = "todoHolder";
+  app.appendChild(todoHolder);
+
+  for (const project of projects) {
+    const newProject = document.createElement("div");
+    newProject.innerText = project;
+    projectMenu.append(newProject);
+  }
+
+  for (const todo of todos) {
+    const wrapper = document.createElement("div");
+    const newTodo = document.createElement("span");
+    newTodo.name = todo.title;
+    newTodo.innerText = todo.title;
+
+    newTodo.addEventListener("click", () => {
+      updateTodoModal(todoModal, todo);
+      todoModal.style.display = "block";
+    });
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.for = todo.title;
+    checkbox.checked = todo.done;
+
+    checkbox.addEventListener("change", () => {
+      item.toggleStatus();
+    });
+    wrapper.append(checkbox);
+    wrapper.append(newTodo);
+    todoHolder.append(wrapper);
+  }
+}
+
+/**
  * Form for todo creation
  * @constructor
  * @returns {HTMLFormElement} Created form
@@ -112,4 +158,4 @@ function updateTodoModal(modal, todo) {
   modal.appendChild(priority);
 }
 
-export { createTodoForm, updateTodoModal };
+export { createTodoForm, updateTodoModal, generateBaseHTML as baseHTML };

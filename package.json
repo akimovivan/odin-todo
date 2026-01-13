@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "@fontsource/fira-mono": "^5.2.7",
+    "date-fns": "^4.1.0"
   }
 }
