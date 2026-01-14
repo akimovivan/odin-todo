@@ -54,7 +54,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background-color: magenta;
+  background-color: silver;
   height: 100%;
 }
 
@@ -117,4 +117,10 @@ header {
 .project-item.selected-project {
   background-color: pink;
   font-style: italic;
+}
+
+#todoHolder .todo-item.done {
+  background-color: black;
+  color: white;
+  text-decoration: line-through;
 }

@@ -1,5 +1,7 @@
 /** @module todos */
 
+import { compareAsc } from "date-fns";
+
 /** @type {string[]} */
 let projects = [];
 
@@ -14,7 +16,7 @@ class Todo {
    * @constructor
    * @param {string} title - Title of todo
    * @param {string} description - Description of todo
-   * @param {string} dueDate - Due date of todo
+   * @param {Date} dueDate - Due date of todo
    * @param {number} priority - Priority of todo
    * @param {string} project - Project to which todo belongs to
    * @param {boolean | null} done - Is todo done
@@ -22,7 +24,7 @@ class Todo {
   constructor(title, description, dueDate, priority, project, done = false) {
     this.title = title;
     this.description = description;
-    this.dueDate = dueDate; // string for now
+    this.dueDate = dueDate;
     this.priority = priority;
     this.project = project;
     this.done = done;
@@ -33,6 +35,7 @@ class Todo {
    */
   save() {
     if (todos.some((todo) => todo.title == this.title)) {
+      alert("Duplicate todo");
       throw new Error("Duplicate todo");
     }
 
@@ -86,7 +89,10 @@ class Todo {
    * @returns {Todo[]}
    */
   static getTodosByProject(project) {
-    return todos.filter((todo) => todo.project === project);
+    return todos
+      .filter((todo) => todo.project === project)
+      .sort((a, b) => compareAsc(a.dueDate, b.dueDate))
+      .sort((a, b) => (a.done && !b.done ? 1 : -1));
   }
 
   /**

@@ -1,6 +1,7 @@
 /** @module ui */
 
 import { Todo, createProject, projects } from "./todos";
+import { compareAsc, format } from "date-fns";
 
 let selectedProject = "default";
 
@@ -58,6 +59,21 @@ function openTodoForm(modal) {
 
   form.appendChild(document.createElement("br"));
 
+  const dueDateLabel = document.createElement("label");
+  dueDateLabel.setAttribute("for", "dueDate");
+  dueDateLabel.textContent = "Due date:";
+  form.appendChild(dueDateLabel);
+
+  form.appendChild(document.createElement("br"));
+
+  const dueDateInput = document.createElement("input");
+  dueDateInput.type = "date";
+  dueDateInput.id = "dueDate";
+  dueDateInput.name = "dueDate";
+  form.appendChild(dueDateInput);
+
+  form.appendChild(document.createElement("br"));
+
   const selectProject = document.createElement("select");
   selectProject.id = "selectProject";
   selectProject.name = "selectProject";
@@ -98,8 +114,8 @@ function openTodoForm(modal) {
     new Todo(
       form.elements.title.value,
       form.elements.description.value,
-      "", // TODO: add date handling
-      form.elements.selectPriority.value,
+      new Date(form.elements.dueDate.value),
+      parseInt(form.elements.selectPriority.value),
       form.elements.selectProject.value,
     ).save();
 
@@ -196,6 +212,9 @@ function updateContents(todos, projects) {
     newTodoDescription.classList.add("todo-description");
     newTodoDescription.innerText = "Description: " + todo.description;
 
+    const newDueDate = document.createElement("div");
+    newDueDate.innerText = format(todo.dueDate, "dd-MM-yyyy");
+
     const checkboxWrapper = document.createElement("div");
     const checkboxLabel = document.createElement("label");
     checkboxLabel.innerText = " Done";
@@ -228,10 +247,41 @@ function updateContents(todos, projects) {
 
     checkbox.addEventListener("change", () => {
       todo.toggleStatus();
+      updateContents(true, null);
     });
 
+    if (todo.done) {
+      wrapper.classList.add("done");
+    } else {
+      wrapper.classList.remove("done");
+    }
+
+    switch (todo.priority) {
+      case 1:
+        wrapper.style.backgroundColor = "red";
+        break;
+      case 2:
+        wrapper.style.backgroundColor = "yellow";
+        break;
+      case 3:
+        wrapper.style.backgroundColor = "blue";
+        break;
+      default:
+        wrapper.style.backgroundColor = "gray";
+    }
+
+    if (!todo.done && compareAsc(todo.dueDate, new Date()) < 0) {
+      const warning = document.createElement("div");
+      warning.innerText = "Due date passed";
+      warning.style.fontWeight = 900;
+      warning.style.fontSize = "1.5rem";
+      warning.style.color = "red";
+      warning.style.backgroundColor = "white";
+      wrapper.appendChild(warning);
+    }
     wrapper.appendChild(newTodoTitle);
     wrapper.appendChild(newTodoDescription);
+    wrapper.appendChild(newDueDate);
     wrapper.appendChild(checkboxWrapper);
     wrapper.appendChild(todoButtons);
     todoHolder.append(wrapper);
@@ -310,6 +360,7 @@ function openEditTodoForm(modal, todo) {
   titleInput.id = "title";
   titleInput.name = "title";
   titleInput.value = todo.title;
+  titleInput.disabled = true;
   form.appendChild(titleInput);
 
   form.appendChild(document.createElement("br"));
@@ -347,6 +398,22 @@ function openEditTodoForm(modal, todo) {
 
   form.appendChild(document.createElement("br"));
 
+  const dueDateLabel = document.createElement("label");
+  dueDateLabel.setAttribute("for", "dueDate");
+  dueDateLabel.textContent = "Due date:";
+  form.appendChild(dueDateLabel);
+
+  form.appendChild(document.createElement("br"));
+
+  const dueDateInput = document.createElement("input");
+  dueDateInput.type = "date";
+  dueDateInput.id = "dueDate";
+  dueDateInput.name = "dueDate";
+  dueDateInput.value = format(todo.dueDate, "yyyy-MM-dd");
+  form.appendChild(dueDateInput);
+
+  form.appendChild(document.createElement("br"));
+
   const selectPriority = document.createElement("select");
   selectPriority.id = "selectPriority";
   selectPriority.name = "selectPriority";
@@ -373,8 +440,8 @@ function openEditTodoForm(modal, todo) {
       new Todo(
         form.elements.title.value,
         form.elements.description.value,
-        "", // TODO: add date handling
-        form.elements.selectPriority.value,
+        new Date(form.elements.dueDate.value),
+        parseInt(form.elements.selectPriority.value),
         form.elements.selectProject.value,
       ),
     );
