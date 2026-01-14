@@ -2,13 +2,14 @@
 
 import { Todo, createProject, projects } from "./todos";
 
+let selectedProject = "default";
+
 /**
  * Creates basic structure
  * @param {HTMLElement} app
- * @param {Todo[]} todos
  * @param {string[]} projects
  * */
-function initializeUI(app, todos, projects) {
+function initializeUI(app, projects) {
   const projectMenu = document.createElement("div");
   projectMenu.id = "projectMenu";
   app.appendChild(projectMenu);
@@ -17,15 +18,14 @@ function initializeUI(app, todos, projects) {
   todoHolder.id = "todoHolder";
   app.appendChild(todoHolder);
 
-  updateContents(todos, projects);
+  updateContents(true, projects);
 }
 
 /**
  * Form for todo creation
  * @param {HTMLElement} modal - Modal for appending form
- * @param {Todo[]} todos
  */
-function openTodoForm(modal, todos) {
+function openTodoForm(modal) {
   const form = document.createElement("form");
 
   const titleLabel = document.createElement("label");
@@ -99,7 +99,7 @@ function openTodoForm(modal, todos) {
       form.elements.selectPriority.value,
       form.elements.selectProject.value,
     );
-    updateContents(todos, null);
+    updateContents(true, null);
     closeModal(modal);
   });
   form.appendChild(submitBtn);
@@ -155,7 +155,7 @@ function updateTodoModal(modal, todo) {
 
 /**
  * Updates projects and todos
- * @param {Todo[] | null} todos
+ * @param {boolean} todos
  * @param {string[] | null} projects
  */
 function updateContents(todos, projects) {
@@ -163,20 +163,24 @@ function updateContents(todos, projects) {
   const todoHolder = document.querySelector("#todoHolder");
 
   if (projects) {
+    projects = projects.sort();
     projectMenu.innerHTML = "";
     for (const project of projects) {
       const newProject = document.createElement("div");
       newProject.innerText = project;
       newProject.classList.add("project-item");
+      if (project === selectedProject) {
+        newProject.classList.add("selected-project");
+      }
       projectMenu.append(newProject);
     }
   }
 
-  if (todos == null) {
+  if (todos == false) {
     return;
   }
   todoHolder.innerHTML = "";
-  for (const todo of todos) {
+  for (const todo of Todo.getTodosByProject(selectedProject)) {
     const wrapper = document.createElement("div");
     const newTodo = document.createElement("span");
     newTodo.name = todo.title;
@@ -231,7 +235,7 @@ function openProjectForm(modal) {
   submitBtn.innerText = "Create Project";
   submitBtn.addEventListener("click", () => {
     createProject(form.elements.projectName.value);
-    updateContents(null, projects);
+    updateContents(false, projects);
     closeModal(modal);
   });
   form.appendChild(submitBtn);
@@ -247,4 +251,18 @@ function openProjectForm(modal) {
   modal.style.display = "block";
 }
 
-export { openProjectForm, openTodoForm, updateTodoModal, initializeUI };
+/**
+ * @param {string} project
+ */
+function changeSelectedProject(project) {
+  selectedProject = project;
+  updateContents(true, projects);
+}
+
+export {
+  openProjectForm,
+  openTodoForm,
+  updateTodoModal,
+  initializeUI,
+  changeSelectedProject,
+};

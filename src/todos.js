@@ -74,6 +74,15 @@ class Todo {
       data.done,
     );
   }
+
+  /**
+   * Get all todos from specific project
+   * @param {string} project
+   * @returns {Todo[]}
+   */
+  static getTodosByProject(project) {
+    return todos.filter((todo) => todo.project === project);
+  }
 }
 
 /**
