@@ -1,12 +1,12 @@
 /** @module todos */
 
-import { compareAsc } from "date-fns";
+import { compareAsc } from "date-fns"
 
 /** @type {string[]} */
-let projects = [];
+let projects = []
 
 /** @type {Todo[]} */
-let todos = [];
+let todos = []
 
 /**
  * Todo object with related objects
@@ -22,12 +22,12 @@ class Todo {
    * @param {boolean | null} done - Is todo done
    */
   constructor(title, description, dueDate, priority, project, done = false) {
-    this.title = title;
-    this.description = description;
-    this.dueDate = dueDate;
-    this.priority = priority;
-    this.project = project;
-    this.done = done;
+    this.title = title
+    this.description = description
+    this.dueDate = dueDate
+    this.priority = priority
+    this.project = project
+    this.done = done
   }
 
   /**
@@ -35,22 +35,22 @@ class Todo {
    */
   save() {
     if (todos.some((todo) => todo.title == this.title)) {
-      alert("Duplicate todo");
-      throw new Error("Duplicate todo");
+      alert("Duplicate todo")
+      throw new Error("Duplicate todo")
     }
 
     if (!projects.includes(this.project)) {
-      throw new Error("Non existing project");
+      throw new Error("Non existing project")
     }
 
-    todos.push(this);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    todos.push(this)
+    localStorage.setItem("todos", JSON.stringify(todos))
   }
 
   /** toggleStatus changes done status of this todo */
   toggleStatus() {
-    this.done = !this.done;
-    localStorage.setItem("todos", JSON.stringify(todos));
+    this.done = !this.done
+    localStorage.setItem("todos", JSON.stringify(todos))
   }
 
   /**
@@ -60,11 +60,11 @@ class Todo {
    */
   addToProject(project) {
     if (projects.includes(project)) {
-      this.project = project;
-      localStorage.setItem("todos", JSON.stringify(todos));
-      return true;
+      this.project = project
+      localStorage.setItem("todos", JSON.stringify(todos))
+      return true
     }
-    return false;
+    return false
   }
 
   /**
@@ -80,7 +80,7 @@ class Todo {
       data.priority,
       data.project,
       data.done,
-    );
+    )
   }
 
   /**
@@ -92,7 +92,7 @@ class Todo {
     return todos
       .filter((todo) => todo.project === project)
       .sort((a, b) => compareAsc(a.dueDate, b.dueDate))
-      .sort((a, b) => (a.done && !b.done ? 1 : -1));
+      .sort((a, b) => (a.done && !b.done ? 1 : -1))
   }
 
   /**
@@ -100,17 +100,17 @@ class Todo {
    * @param {string} title
    */
   static deleteTodo(title) {
-    todos = todos.filter((todo) => todo.title != title);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    todos = todos.filter((todo) => todo.title != title)
+    localStorage.setItem("todos", JSON.stringify(todos))
   }
 
   /**
    * @param {Todo} todo
    */
   static editTodo(todo) {
-    let oldTodoIdx = todos.findIndex((item) => item.title === todo.title); // TODO: change id for todos
-    todos[oldTodoIdx] = todo;
-    localStorage.setItem("todos", JSON.stringify(todos));
+    let oldTodoIdx = todos.findIndex((item) => item.title === todo.title) // TODO: change id for todos
+    todos[oldTodoIdx] = todo
+    localStorage.setItem("todos", JSON.stringify(todos))
   }
 }
 
@@ -120,23 +120,23 @@ class Todo {
  */
 function createProject(project) {
   if (!projects.includes(project)) {
-    projects.push(project);
-    localStorage.setItem("projects", JSON.stringify(projects));
+    projects.push(project)
+    localStorage.setItem("projects", JSON.stringify(projects))
   }
 }
 
 /** Update todo and projects from values stored in local storage */
 function getFromStorage() {
   try {
-    projects = JSON.parse(localStorage.getItem("projects")) ?? [];
-    const todosDeconstructed = JSON.parse(localStorage.getItem("todos")) ?? [];
-    todos = [];
+    projects = JSON.parse(localStorage.getItem("projects")) ?? []
+    const todosDeconstructed = JSON.parse(localStorage.getItem("todos")) ?? []
+    todos = []
     for (const todo of todosDeconstructed) {
-      Todo.fromJSON(todo).save();
+      Todo.fromJSON(todo).save()
     }
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 }
 
-export { projects, todos, Todo, createProject, getFromStorage };
+export { projects, todos, Todo, createProject, getFromStorage }

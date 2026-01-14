@@ -1,5 +1,4 @@
 :root {
-
 }
 
 body {
@@ -7,7 +6,7 @@ body {
   flex-direction: column;
   height: 100vh;
   margin: 0;
-  font-family: 'Fira Mono', monospace;
+  font-family: "Fira Mono", monospace;
 }
 
 header {
@@ -66,7 +65,7 @@ header {
   padding: 1rem;
 }
 
-#todoHolder>div {
+#todoHolder > div {
   background-color: #51e2f5;
 }
 
@@ -74,8 +73,8 @@ header {
   width: 40ch;
   height: 200px;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.9);
   padding: 1rem;
   color: white;
 }

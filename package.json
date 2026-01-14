@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier ./src --write --no-semi"
   },
   "devDependencies": {
+    "prettier": "3.7.4",
     "vite": "^7.2.4"
   },
   "dependencies": {
