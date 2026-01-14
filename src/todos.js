@@ -20,19 +20,24 @@ class Todo {
    * @param {boolean | null} done - Is todo done
    */
   constructor(title, description, dueDate, priority, project, done = false) {
-    if (todos.some((todo) => todo.title == title)) {
-      throw new Error("Duplicate todo");
-    }
     this.title = title;
     this.description = description;
     this.dueDate = dueDate; // string for now
     this.priority = priority;
+    this.project = project;
     this.done = done;
+  }
 
-    if (projects.includes(project)) {
-      this.project = project;
-    } else {
-      this.project = "";
+  /**
+   * Saves todo to todos array and local storage
+   */
+  save() {
+    if (todos.some((todo) => todo.title == this.title)) {
+      throw new Error("Duplicate todo");
+    }
+
+    if (!projects.includes(this.project)) {
+      throw new Error("Non existing project");
     }
 
     todos.push(this);
@@ -92,6 +97,15 @@ class Todo {
     todos = todos.filter((todo) => todo.title != title);
     localStorage.setItem("todos", JSON.stringify(todos));
   }
+
+  /**
+   * @param {Todo} todo
+   */
+  static editTodo(todo) {
+    let oldTodoIdx = todos.findIndex((item) => item.title === todo.title); // TODO: change id for todos
+    todos[oldTodoIdx] = todo;
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
 }
 
 /**
@@ -112,7 +126,7 @@ function getFromStorage() {
     const todosDeconstructed = JSON.parse(localStorage.getItem("todos")) ?? [];
     todos = [];
     for (const todo of todosDeconstructed) {
-      Todo.fromJSON(todo);
+      Todo.fromJSON(todo).save();
     }
   } catch (e) {
     console.error(e);

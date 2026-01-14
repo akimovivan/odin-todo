@@ -101,7 +101,8 @@ function openTodoForm(modal) {
       "", // TODO: add date handling
       form.elements.selectPriority.value,
       form.elements.selectProject.value,
-    );
+    ).save();
+
     updateContents(true, null);
     modal.close();
   });
@@ -212,6 +213,10 @@ function updateContents(todos, projects) {
     const editButton = document.createElement("button");
     editButton.innerText = "Edit";
 
+    editButton.addEventListener("click", () => {
+      openEditTodoForm(modal, todo);
+    });
+
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Delete";
     deleteButton.addEventListener("click", () => {
@@ -284,6 +289,110 @@ function openProjectForm(modal) {
 function changeSelectedProject(project) {
   selectedProject = project;
   updateContents(true, projects);
+}
+
+/**
+ * @param {HTMLDialogElement} modal
+ * @param {Todo} todo
+ */
+function openEditTodoForm(modal, todo) {
+  const form = document.createElement("form");
+
+  const titleLabel = document.createElement("label");
+  titleLabel.setAttribute("for", "title");
+  titleLabel.textContent = "Title:";
+  form.appendChild(titleLabel);
+
+  form.appendChild(document.createElement("br"));
+
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.id = "title";
+  titleInput.name = "title";
+  titleInput.value = todo.title;
+  form.appendChild(titleInput);
+
+  form.appendChild(document.createElement("br"));
+
+  const descriptionLabel = document.createElement("label");
+  descriptionLabel.setAttribute("for", "description");
+  descriptionLabel.textContent = "Description:";
+  form.appendChild(descriptionLabel);
+
+  form.appendChild(document.createElement("br"));
+
+  const descriptionInput = document.createElement("input");
+  descriptionInput.type = "text";
+  descriptionInput.id = "description";
+  descriptionInput.name = "description";
+  descriptionInput.value = todo.description;
+  form.appendChild(descriptionInput);
+
+  form.appendChild(document.createElement("br"));
+
+  const selectProject = document.createElement("select");
+  selectProject.id = "selectProject";
+  selectProject.name = "selectProject";
+  form.appendChild(selectProject);
+
+  for (const project of projects) {
+    const option = document.createElement("option");
+    option.value = project;
+    if (project === todo.project) {
+      option.selected = true;
+    }
+    option.text = project;
+    selectProject.appendChild(option);
+  }
+
+  form.appendChild(document.createElement("br"));
+
+  const selectPriority = document.createElement("select");
+  selectPriority.id = "selectPriority";
+  selectPriority.name = "selectPriority";
+  form.appendChild(selectPriority);
+
+  for (let i = 1; i < 5; i++) {
+    const option = document.createElement("option");
+    option.text = `Priority ${i}`;
+    option.value = i;
+    selectPriority.appendChild(option);
+    if (i === todo.priority) {
+      option.selected = true;
+    }
+  }
+
+  form.appendChild(document.createElement("br"));
+
+  const submitBtn = document.createElement("button");
+  submitBtn.id = "submitTodo";
+  submitBtn.type = "button";
+  submitBtn.innerText = "Edit Todo";
+  submitBtn.addEventListener("click", () => {
+    Todo.editTodo(
+      new Todo(
+        form.elements.title.value,
+        form.elements.description.value,
+        "", // TODO: add date handling
+        form.elements.selectPriority.value,
+        form.elements.selectProject.value,
+      ),
+    );
+
+    modal.close();
+    updateContents(true, null);
+  });
+  form.appendChild(submitBtn);
+
+  modal.innerHTML = "";
+  const closeModalBtn = document.createElement("span");
+  closeModalBtn.innerHTML = "&times;";
+  closeModalBtn.classList.add("close");
+  closeModalBtn.addEventListener("click", () => closeModal(modal));
+  modal.appendChild(closeModalBtn);
+
+  modal.appendChild(form);
+  modal.showModal();
 }
 
 export {
