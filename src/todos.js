@@ -83,6 +83,15 @@ class Todo {
   static getTodosByProject(project) {
     return todos.filter((todo) => todo.project === project);
   }
+
+  /**
+   * Removes todo from list of todos by title
+   * @param {string} title
+   */
+  static deleteTodo(title) {
+    todos = todos.filter((todo) => todo.title != title);
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
 }
 
 /**
@@ -99,8 +108,8 @@ function createProject(project) {
 /** Update todo and projects from values stored in local storage */
 function getFromStorage() {
   try {
-    projects = JSON.parse(localStorage.getItem("projects"));
-    const todosDeconstructed = JSON.parse(localStorage.getItem("todos"));
+    projects = JSON.parse(localStorage.getItem("projects")) ?? [];
+    const todosDeconstructed = JSON.parse(localStorage.getItem("todos")) ?? [];
     todos = [];
     for (const todo of todosDeconstructed) {
       Todo.fromJSON(todo);

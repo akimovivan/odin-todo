@@ -66,6 +66,9 @@ function openTodoForm(modal) {
   for (const project of projects) {
     const option = document.createElement("option");
     option.value = project;
+    if (project === selectedProject) {
+      option.selected = true;
+    }
     option.text = project;
     selectProject.appendChild(option);
   }
@@ -100,7 +103,7 @@ function openTodoForm(modal) {
       form.elements.selectProject.value,
     );
     updateContents(true, null);
-    closeModal(modal);
+    modal.close();
   });
   form.appendChild(submitBtn);
 
@@ -112,15 +115,15 @@ function openTodoForm(modal) {
   modal.appendChild(closeModalBtn);
 
   modal.appendChild(form);
-  modal.style.display = "block";
+  modal.showModal();
 }
 
 /**
  * Close todo modal
- * @param {HTMLElement} modal
+ * @param {HTMLDialogElement} modal
  * */
 function closeModal(modal) {
-  modal.style.display = "none";
+  modal.close();
 }
 
 /**
@@ -182,26 +185,50 @@ function updateContents(todos, projects) {
   todoHolder.innerHTML = "";
   for (const todo of Todo.getTodosByProject(selectedProject)) {
     const wrapper = document.createElement("div");
-    const newTodo = document.createElement("span");
-    newTodo.name = todo.title;
-    newTodo.innerText = todo.title;
-    newTodo.classList.add("todo-item");
+    wrapper.classList.add("todo-item");
 
-    // newTodo.addEventListener("click", () => {
-    //   updateTodoModal(todoModal, todo);
-    //   todoModal.style.display = "block";
-    // });
+    const newTodoTitle = document.createElement("div");
+    newTodoTitle.name = todo.title;
+    newTodoTitle.innerText = "Title: " + todo.title;
 
+    const newTodoDescription = document.createElement("div");
+    newTodoDescription.classList.add("todo-description");
+    newTodoDescription.innerText = "Description: " + todo.description;
+
+    const checkboxWrapper = document.createElement("div");
+    const checkboxLabel = document.createElement("label");
+    checkboxLabel.innerText = " Done";
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.for = todo.title;
+    checkbox.name = todo.title;
     checkbox.checked = todo.done;
 
-    checkbox.addEventListener("change", () => {
-      item.toggleStatus();
+    checkboxWrapper.appendChild(checkbox);
+    checkboxWrapper.appendChild(checkboxLabel);
+
+    const todoButtons = document.createElement("div");
+    todoButtons.classList.add("todo-buttons");
+
+    const editButton = document.createElement("button");
+    editButton.innerText = "Edit";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Delete";
+    deleteButton.addEventListener("click", () => {
+      Todo.deleteTodo(todo.title);
+      updateContents(true);
     });
-    wrapper.append(checkbox);
-    wrapper.append(newTodo);
+
+    todoButtons.append(editButton, deleteButton);
+
+    checkbox.addEventListener("change", () => {
+      todo.toggleStatus();
+    });
+
+    wrapper.appendChild(newTodoTitle);
+    wrapper.appendChild(newTodoDescription);
+    wrapper.appendChild(checkboxWrapper);
+    wrapper.appendChild(todoButtons);
     todoHolder.append(wrapper);
   }
 }
@@ -236,7 +263,7 @@ function openProjectForm(modal) {
   submitBtn.addEventListener("click", () => {
     createProject(form.elements.projectName.value);
     updateContents(false, projects);
-    closeModal(modal);
+    modal.close();
   });
   form.appendChild(submitBtn);
 
@@ -248,7 +275,7 @@ function openProjectForm(modal) {
   modal.appendChild(closeModalBtn);
 
   modal.appendChild(form);
-  modal.style.display = "block";
+  modal.showModal();
 }
 
 /**
